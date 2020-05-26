@@ -38,6 +38,22 @@ console.log(`Parser Output`)
 console.log(parse(lex(input)))
 console.log(``)
 
+const evaluate = ast => {
+  const opAcMap = {
+    sum: args => args.reduce((a, b) => a + b, 0),
+    sub: args => args.reduce((a, b) => a - b),
+    div: args => args.reduce((a, b) => a / b),
+    mul: args => args.reduce((a, b) => a * b, 1)
+  };
+
+  if (ast.type === Num) return ast.val;
+  return opAcMap[ast.val](ast.expr.map(evaluate));
+};
+
+console.log(`Evaluator Output`)
+console.log(evaluate(parse(lex(input))))
+console.log(``)
+
 const transpile = ast => {
     const opMap = { sum: '+', mul: '*', sub: '-', div: '/' };
     const transpileNode = ast => ast.type === Num ? transpileNum(ast) : transpileOp(ast);
@@ -51,4 +67,5 @@ console.log(transpile(parse(lex(input))))
 console.log(``)
 
 console.log(eval(transpile(parse(lex(input)))))
+
 
